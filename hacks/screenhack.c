@@ -265,7 +265,7 @@ MapNotify_event_p (Display *dpy, XEvent *event, XPointer window)
 }
 
 
-static Atom XA_WM_PROTOCOLS, XA_WM_DELETE_WINDOW;
+static Atom XA_WM_PROTOCOLS, XA_WM_DELETE_WINDOW, _NET_WM_PID;
 
 /* Dead-trivial event handling: exits if "q" or "ESC" are typed.
    Exit if the WM_PROTOCOLS WM_DELETE_WINDOW ClientMessage is received.
@@ -689,6 +689,8 @@ init_window (Display *dpy, Widget toplevel, const char *title)
 {
   Window window;
   XWindowAttributes xgwa;
+  long pid;
+
   XtPopup (toplevel, XtGrabNone);
   XtVaSetValues (toplevel, XtNtitle, title, NULL);
 
@@ -702,6 +704,10 @@ init_window (Display *dpy, Widget toplevel, const char *title)
   XChangeProperty (dpy, window, XA_WM_PROTOCOLS, XA_ATOM, 32,
                    PropModeReplace,
                    (unsigned char *) &XA_WM_DELETE_WINDOW, 1);
+  /* Set pid */
+  pid = getpid();
+  XChangeProperty (dpy, window, _NET_WM_PID, XA_CARDINAL, 32,
+                  PropModeReplace, (unsigned char *)&pid, 1);
 }
 
 
@@ -767,6 +773,7 @@ main (int argc, char **argv)
 
   XA_WM_PROTOCOLS = XInternAtom (dpy, "WM_PROTOCOLS", False);
   XA_WM_DELETE_WINDOW = XInternAtom (dpy, "WM_DELETE_WINDOW", False);
+  _NET_WM_PID = XInternAtom (dpy, "_NET_WM_PID", False);
 
   {
     char *v = (char *) strdup(strchr(screensaver_id, ' '));
