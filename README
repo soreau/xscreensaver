@@ -27,14 +27,13 @@ To compile for a Unix system with X11:
     If you are on an "apt"-based system, "apt-get build-dep xscreensaver"
     might install most of the compilation dependencies.
 
-To compile for macOS X or iOS:
+To use with swayidle:
 
-    Use the included XCode project.  Requires XCode 6 and macOS 10.8
-    or newer.
-
-To compile for Android:
-
-    See android/README.
+    1) Install to a nonstandard prefix
+    2) Start the screensaver:
+    /opt/xscreensaver/bin/xscreensaver -nosplash
+    3) Start swayidle:
+    swayidle timeout 60 '/opt/xscreensaver/bin/xscreensaver-command -activate' resume '/opt/xscreensaver/bin/xscreensaver-command -deactivate'
 
 Interested in writing a new screen saver?
 
