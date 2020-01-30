@@ -1375,6 +1375,7 @@ main_loop (saver_info *si)
 #endif /* !NO_LOCKING */
 
 
+      si->ok_to_unblank = False;
       ok_to_unblank = True;
       do {
 
@@ -1419,6 +1420,10 @@ main_loop (saver_info *si)
                 cycle_timer ((XtPointer) si, 0);
               }
 	  }
+	else
+          {
+            ok_to_unblank = si->ok_to_unblank;
+          }
 #endif /* !NO_LOCKING */
 
 	} while (!ok_to_unblank);
@@ -1814,6 +1819,7 @@ handle_clientmessage (saver_info *si, XEvent *event, Bool until_idle_p)
   type = event->xclient.data.l[0];
   if (type == XA_ACTIVATE)
     {
+      si->ok_to_unblank = False;
       if (until_idle_p)
 	{
           if (p->mode == DONT_BLANK)
@@ -1850,6 +1856,7 @@ handle_clientmessage (saver_info *si, XEvent *event, Bool until_idle_p)
     }
   else if (type == XA_DEACTIVATE)
     {
+      si->ok_to_unblank = True;
 
       /* Regardless of whether the screen saver is active, a DEACTIVATE
          message should cause the monitor to become powered on. */
