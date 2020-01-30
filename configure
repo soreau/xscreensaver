@@ -12454,7 +12454,7 @@ $as_echo "$ac_cv_gtk_config_libs" >&6; }
   GTK_EXTRA_OBJS=""
   GTK_DATADIR=""
   if test "$have_gtk" = yes; then
-    GTK_DATADIR=`$pkg_config --variable=prefix gtk+-2.0`
+    GTK_DATADIR=${prefix}
     GTK_DATADIR="$GTK_DATADIR/share"
   fi
 
