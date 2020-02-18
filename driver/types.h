@@ -345,6 +345,7 @@ struct saver_info {
   XtIntervalId stderr_popup_timer;
 
   Bool ok_to_unblank;
+  int activate_ref;
 
 # ifdef HAVE_LIBSYSTEMD
   pid_t systemd_pid;

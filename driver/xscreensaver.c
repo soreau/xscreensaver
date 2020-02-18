@@ -1184,6 +1184,8 @@ main_loop (saver_info *si)
   Bool ok_to_unblank;
   int i;
 
+  si->activate_ref = 0;
+
   while (1)
     {
       Bool was_locked = False;
@@ -1820,6 +1822,16 @@ handle_clientmessage (saver_info *si, XEvent *event, Bool until_idle_p)
   if (type == XA_ACTIVATE)
     {
       si->ok_to_unblank = False;
+      si->activate_ref++;
+
+      if (si->activate_ref != 1)
+      {
+          clientmessage_response(si, window, True,
+		       "ClientMessage ACTIVATE received after multiple DEACTIVATES.",
+		       "activate: Aborting action.");
+          return False;
+      }
+
       if (until_idle_p)
 	{
           if (p->mode == DONT_BLANK)
@@ -1857,6 +1869,15 @@ handle_clientmessage (saver_info *si, XEvent *event, Bool until_idle_p)
   else if (type == XA_DEACTIVATE)
     {
       si->ok_to_unblank = True;
+      si->activate_ref--;
+
+      if (si->activate_ref != 0)
+      {
+          clientmessage_response(si, window, True,
+		       "ClientMessage DEACTIVATE received but ref is out of sync.",
+		       "deactivate: Aborting action.");
+          return False;
+      }
 
       /* Regardless of whether the screen saver is active, a DEACTIVATE
          message should cause the monitor to become powered on. */
