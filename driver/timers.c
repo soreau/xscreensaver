@@ -839,7 +839,7 @@ sleep_until_idle (saver_info *si, Bool until_idle_p)
 		idle = 1000 * (si->last_activity_time - time ((time_t *) 0));
 	      }
 
-	    if (idle >= p->timeout)
+	    if (0)
               {
                 /* Look, we've been idle long enough.  We're done. */
                 why = "timeout";
